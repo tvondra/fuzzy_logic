@@ -1,0 +1,4 @@
+# Gödel fuzzy logic
+comment = 'Provides operators to evaluate fuzzy logic expressions according to Gödel logic.'
+default_version = '1.0.0'
+relocatable = true

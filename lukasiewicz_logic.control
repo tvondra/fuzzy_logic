@@ -1,0 +1,4 @@
+# Łukasiewicz fuzzy logic
+comment = 'Provides operators to evaluate fuzzy logic expressions according to Łukasiewicz logic.'
+default_version = '1.0.0'
+relocatable = true

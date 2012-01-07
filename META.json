@@ -1,0 +1,43 @@
+{
+   "name": "fuzzy_logic",
+   "abstract": "Operators for three basic fuzzy logics - Łukasiewicz, Gödel and product.",
+   "description": "Implements basic logical operators (conjunction, disjunction, implication and negation) for three basic fuzzy logics - Łukasiewicz, Gödel and product. In case of the Łukasiewicz logic, there are also operators for weak conjunction and disjunction.",
+   "version": "1.0.0",
+   "maintainer": "Tomas Vondra <tv@fuzzy.cz>",
+   "license": "bsd",
+   "prereqs": {
+      "runtime": {
+         "requires": {
+            "PostgreSQL": "8.3.0"
+         }
+      }
+   },
+   "provides": {
+     "godel_logic": {
+       "file": "godel_logic--1.0.0.sql",
+       "version": "1.0.0"
+     },
+     "lukasiewicz_logic": {
+       "file": "lukasiewicz_logic--1.0.0.sql",
+       "version": "1.0.0"
+     },
+     "product_logic": {
+       "file": "product_logic--1.0.0.sql",
+       "version": "1.0.0"
+     }
+   },
+   "resources": {
+      "repository": {
+        "url":  "https://github.com:tvondra/fuzzy_logic.git",
+        "web":  "http://github.com/tvondra/fuzzy_logic",
+        "type": "git"
+      },
+      "x_wiki": "http://en.wikipedia.org/wiki/Fuzzy_logic"
+   },
+   "tags" : ["fuzzy", "logic", "operators", "Gödel", "product", "Łukasiewicz"],
+   "meta-spec": {
+      "version": "1.0.0",
+      "url": "http://pgxn.org/meta/spec.txt"
+   },
+   "release_status" : "testing"
+}
