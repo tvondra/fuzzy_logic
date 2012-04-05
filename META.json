@@ -2,7 +2,7 @@
    "name": "fuzzy_logic",
    "abstract": "Operators for three basic fuzzy logics - Łukasiewicz, Gödel and product.",
    "description": "Implements basic logical operators (conjunction, disjunction, implication and negation) for three basic fuzzy logics - Łukasiewicz, Gödel and product. In case of the Łukasiewicz logic, there are also operators for weak conjunction and disjunction.",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "maintainer": "Tomas Vondra <tv@fuzzy.cz>",
    "license": "bsd",
    "prereqs": {
@@ -14,19 +14,19 @@
    },
    "provides": {
      "godel_logic": {
-       "file": "godel_logic--1.0.0.sql",
+       "file": "godel_logic--1.1.0.sql",
        "docfile" : "README.md",
-       "version": "1.0.0"
+       "version": "1.1.0"
      },
      "lukasiewicz_logic": {
-       "file": "lukasiewicz_logic--1.0.0.sql",
+       "file": "lukasiewicz_logic--1.1.0.sql",
        "docfile" : "README.md",
-       "version": "1.0.0"
+       "version": "1.1.0"
      },
      "product_logic": {
-       "file": "product_logic--1.0.0.sql",
+       "file": "product_logic--1.1.0.sql",
        "docfile" : "README.md",
-       "version": "1.0.0"
+       "version": "1.1.0"
      }
    },
    "resources": {
