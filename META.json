@@ -15,14 +15,17 @@
    "provides": {
      "godel_logic": {
        "file": "godel_logic--1.0.0.sql",
+       "docfile" : "README.md",
        "version": "1.0.0"
      },
      "lukasiewicz_logic": {
        "file": "lukasiewicz_logic--1.0.0.sql",
+       "docfile" : "README.md",
        "version": "1.0.0"
      },
      "product_logic": {
        "file": "product_logic--1.0.0.sql",
+       "docfile" : "README.md",
        "version": "1.0.0"
      }
    },
