@@ -1,0 +1,100 @@
+BEGIN;
+
+CREATE EXTENSION godel_logic;
+
+DO LANGUAGE plpgsql $$
+BEGIN
+
+    -- comutativity
+    FOR i IN 0 .. 100 LOOP
+        FOR j IN 0 .. 100 LOOP
+
+            IF (((i::real/100) & (j::real/100)) != ((j::real/100) & (i::real/100))) THEN
+                RAISE WARNING 'conjunction is not comutative : (% & %) != (% & %)',(i::real/100),(j::real/100),(j::real/100),(i::real/100);
+            END IF;
+
+            IF (((i::real/100) | (j::real/100)) != ((j::real/100) | (i::real/100))) THEN
+                RAISE WARNING 'disjunction is not comutative : (% | %) != (% | %)',(i::real/100),(j::real/100),(j::real/100),(i::real/100);
+            END IF;
+
+        END LOOP;
+    END LOOP;
+
+    -- monoticity
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+            FOR i2 IN i .. 50 LOOP
+                FOR j2 IN j .. 50 LOOP
+
+                    IF (((i::real/50) & (j::real/50)) > ((i2::real/50) & (j2::real/50))) THEN
+                        RAISE WARNING 'conjunction is not monotonous : (% & %) > (% & %)',(i::real/50),(j::real/50),(i2::real/50),(j2::real/50);
+                    END IF;
+
+                    IF (((i::real/50) | (j::real/50)) > ((i2::real/50) | (j2::real/50))) THEN
+                        RAISE WARNING 'disjunction is not monotonous : (% | %) > (% | %)',(i::real/50),(j::real/50),(i2::real/50),(j2::real/50);
+                    END IF;
+
+                END LOOP;
+            END LOOP;
+        END LOOP;
+    END LOOP;
+
+    -- associativity
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+            FOR k IN 0 .. 50 LOOP
+
+                IF (((i::real/50) & ((j::real/50) & (k::real/50))) != (((i::real/50) & (j::real/50)) & (k::real/50))) THEN
+                    RAISE WARNING 'conjunction is not associative : (% & (% & %)) != ((% & %) & %)',(i::real/50),(j::real/50),(k::real/50),(i::real/50),(j::real/50),(k::real/50);
+                END IF;
+
+                IF (((i::real/50) | ((j::real/50) | (k::real/50))) != (((i::real/50) | (j::real/50)) | (k::real/50))) THEN
+                    RAISE WARNING 'disjunction is not associative : (% | (% | %)) != ((% | %) | %)',(i::real/50),(j::real/50),(k::real/50),(i::real/50),(j::real/50),(k::real/50);
+                END IF;
+
+            END LOOP;
+        END LOOP;
+    END LOOP;
+    
+    -- identity elements
+    FOR i IN 0 .. 100 LOOP
+
+        IF ((1 & (i::real/100)) != (i::real/100)) THEN
+            RAISE WARNING '1 is not conjunction identity element: (1 & %) != %',(i::real/100),(i::real/100);
+        END IF;
+
+        IF (((0 | (i::real/100)) - (i::real/100)) BETWEEN 1e-10 AND 1e10) THEN
+            RAISE WARNING '0 is not disjunction identity element: (0 | %) != %',(i::real/100),(i::real/100);
+        END IF;
+
+    END LOOP;
+
+    -- negation
+    IF ((! 0) != 1) THEN
+        RAISE WARNING '1 is not negation of 0: (! 0) != 1';
+    END IF;
+
+    IF ((! 1) != 0) THEN
+        RAISE WARNING '0 is not negation of 1: (! 1) != 0';
+    END IF;
+
+    -- implication
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+
+            IF (((i::real/50) -> (j::real/50)) = 1) AND (i > j) THEN
+                RAISE WARNING '(x -> y) = 1 while (x > y) : (% -> %)',(i::real/50),(j::real/50);
+            END IF;
+
+            IF (((i::real/50) -> (j::real/50)) < 1) AND (i <= j) THEN
+                RAISE WARNING '(x -> y) < 1 while (x <= y) : (% -> %)',(i::real/50),(j::real/50);
+            END IF;
+
+        END LOOP;
+    END LOOP;
+
+END$$;
+
+DROP EXTENSION godel_logic;
+
+ROLLBACK;

@@ -1,0 +1,96 @@
+BEGIN;
+CREATE EXTENSION product_logic;
+DO LANGUAGE plpgsql $$
+BEGIN
+
+    -- comutativity
+    FOR i IN 0 .. 100 LOOP
+        FOR j IN 0 .. 100 LOOP
+
+            IF (((i/100) & (j/100)) != ((j/100) & (i/100))) THEN
+                RAISE WARNING 'conjunction is not comutative : (% & %) != (% & %)',(i/100),(j/100),(j/100),(i/100);
+            END IF;
+
+            IF (((i/100) | (j/100)) != ((j/100) | (i/100))) THEN
+                RAISE WARNING 'disjunction is not comutative : (% | %) != (% | %)',(i/100),(j/100),(j/100),(i/100);
+            END IF;
+
+        END LOOP;
+    END LOOP;
+
+    -- monoticity
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+            FOR i2 IN i .. 50 LOOP
+                FOR j2 IN j .. 50 LOOP
+
+                    IF (((i/50) & (j/50)) > ((i2/50) & (j2/50))) THEN
+                        RAISE WARNING 'conjunction is not monotonous : (% & %) > (% & %)',(i/50),(j/50),(i2/50),(j2/50);
+                    END IF;
+
+                    IF (((i/50) | (j/50)) > ((i2/50) | (j2/50))) THEN
+                        RAISE WARNING 'disjunction is not monotonous : (% | %) > (% | %)',(i/50),(j/50),(i2/50),(j2/50);
+                    END IF;
+
+                END LOOP;
+            END LOOP;
+        END LOOP;
+    END LOOP;
+
+    -- associativity
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+            FOR k IN 0 .. 50 LOOP
+
+                IF (((i/50) & ((j/50) & (k/50))) != (((i/50) & (j/50)) & (k/50))) THEN
+                    RAISE WARNING 'conjunction is not associative : (% & (% & %)) != ((% & %) & %)',(i/50),(j/50),(k/50),(i/50),(j/50),(k/50);
+                END IF;
+
+                IF (((i/50) | ((j/50) | (k/50))) != (((i/50) | (j/50)) | (k/50))) THEN
+                    RAISE WARNING 'disjunction is not associative : (% | (% | %)) != ((% | %) | %)',(i/50),(j/50),(k/50),(i/50),(j/50),(k/50);
+                END IF;
+
+            END LOOP;
+        END LOOP;
+    END LOOP;
+    
+    -- identity elements
+    FOR i IN 0 .. 100 LOOP
+
+        IF ((1 & (i/100)) != (i/100)) THEN
+            RAISE WARNING '1 is not conjunction identity element: (1 & %) != %',(i/100),(i/100);
+        END IF;
+
+        IF ((0 | (i/100)) != (i/100)) THEN
+            RAISE WARNING '0 is not disjunction identity element: (0 | %) != %',(i/100),(i/100);
+        END IF;
+
+    END LOOP;
+
+    -- negation
+    IF ((! 0) != 1) THEN
+        RAISE WARNING '1 is not negation of 0: (! 0) != 1';
+    END IF;
+
+    IF ((! 1) != 0) THEN
+        RAISE WARNING '0 is not negation of 1: (! 1) != 0';
+    END IF;
+
+    -- implication
+    FOR i IN 0 .. 50 LOOP
+        FOR j IN 0 .. 50 LOOP
+
+            IF (((i::real/50) -> (j::real/50)) = 1) AND (i > j) THEN
+                RAISE WARNING '(x -> y) = 1 while (x > y) : (% -> %)',(i::real/50),(j::real/50);
+            END IF;
+
+            IF (((i::real/50) -> (j::real/50)) < 1) AND (i <= j) THEN
+                RAISE WARNING '(x -> y) < 1 while (x <= y) : (% -> %)',(i::real/50),(j::real/50);
+            END IF;
+
+        END LOOP;
+    END LOOP;
+
+END$$;
+DROP EXTENSION product_logic;
+ROLLBACK;
