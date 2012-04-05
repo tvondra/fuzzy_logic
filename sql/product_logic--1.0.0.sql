@@ -9,7 +9,7 @@ CREATE FUNCTION product_disjunction(a fuzzy_boolean, b fuzzy_boolean) RETURNS fu
 $$ LANGUAGE SQL;
 
 CREATE FUNCTION product_residuum(a fuzzy_boolean, b fuzzy_boolean) RETURNS fuzzy_boolean AS $$
-	SELECT least(1, $2/$1)::fuzzy_boolean;
+	SELECT (CASE WHEN ($1 > $2) THEN least(1, $2/$1) ELSE 1 END)::fuzzy_boolean;
 $$ LANGUAGE SQL;
 
 CREATE FUNCTION product_negation(a fuzzy_boolean) RETURNS fuzzy_boolean AS $$
